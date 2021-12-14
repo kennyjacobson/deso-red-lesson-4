@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {  Grid } from '@mui/material'
+import {  Grid, Skeleton, Stack } from '@mui/material'
 import UserCard from '../Components/userCard'
 import PostCard from '../Components/postCard'
 import DesoApi from '../Deso/desoApi'
@@ -28,6 +28,8 @@ const posts ={ Posts : [
 function Main(props) {
     const [userData, setUserData] = useState(user)
     const [userPosts, setUserPosts] = useState(posts)
+    const [waitingUser, setWaitingUser] = useState(false)
+    const [waitingPosts, setWaitingPosts] = useState(false)
     //const [user, setUser ] = useState("KennyJ")
     const { id } = useParams()
     let thisUser = "hnshah"
@@ -54,17 +56,24 @@ function Main(props) {
     }
 
     const fetchUser = async (username) => {
+        setWaitingUser(true)
         const desoApi = new DesoApi()
         const returnedUserData = await desoApi.getSingleProfile(null, username)
         if(!returnedUserData) return
         setUserData(returnedUserData)
+        setWaitingUser(false)
     }
 
     const fetchUserPosts = async (username) => {
+        setWaitingPosts(true)
         const desoApi = new DesoApi()
         const returnedUserPostData = await desoApi.getPostsForPublicKey(username, "")
         if(!returnedUserPostData) return
+        if(!returnedUserPostData.Posts) {
+            returnedUserPostData.Posts = []
+        }
         setUserPosts(returnedUserPostData)
+        setWaitingPosts(false)
     }
 
     return (
@@ -73,20 +82,55 @@ function Main(props) {
 
             <Grid item xs={0} md={3}> </Grid>    
             <Grid item xs={12} md={6} >
-                <UserCard 
-                    username={userData.Profile?.Username} 
-                    userBio={userData.Profile?.Description}  
-                    PublicKeyBase58Check={userData.Profile?.PublicKeyBase58Check}
-                ></UserCard>
+                {
+                (waitingUser) ? (
+                    <Stack spacing={1}>
+                        <Skeleton variant="text" />
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={118} />
+                    </Stack>
+
+                ) : (
+                    <UserCard 
+                        username={userData.Profile?.Username} 
+                        userBio={userData.Profile?.Description}  
+                        PublicKeyBase58Check={userData.Profile?.PublicKeyBase58Check}
+                    ></UserCard>
+                )
+                }
             </Grid>
             <Grid item xs={0} md={3}></Grid>
 
             {
-                (userPosts.Posts) ? 
+                (waitingPosts) ? (
+                    <>
+                    <Grid item xs={0} md={3}> </Grid>    
+                    <Grid item xs={12} md={6} >
+                    <Stack spacing={1}>
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={118} />
+                    </Stack>
+                    </Grid>
+                    <Grid item xs={0} md={3}></Grid>
+                    <Grid item xs={0} md={3}> </Grid>    
+                    <Grid item xs={12} md={6} >
+                    <Stack spacing={1}>
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={118} />
+                    </Stack>
+                    </Grid>
+                    <Grid item xs={0} md={3}></Grid>
+
+                    </>
+
+                ) :
+               
                 userPosts.Posts.map((post) => (
                     <>
                     <Grid item xs={0} md={3}> </Grid>    
                     <Grid item xs={12} md={6} >
+
+
                         <PostCard 
                             ImageURLs={post.ImageURLs} 
                             postText={post.Body} 
@@ -98,12 +142,15 @@ function Main(props) {
                             diamondCount={post.DiamondCount} 
                             commentCount={post.CommentCount} 
                         ></PostCard>
+
+
+
                     </Grid>
                     <Grid item xs={0} md={3}></Grid>
 
                     </>
                     
-                )) : (<></>)
+                )) 
             }
             
         </Grid>
