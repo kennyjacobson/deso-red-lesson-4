@@ -39,7 +39,7 @@ function Main(props) {
         props.setSearchFunction(() => searchForUser);
         fetchUser(thisUser)
         fetchUserPosts(thisUser)
-    }, []) 
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     function searchForUser(searchValue) {
         //alert(searchValue)

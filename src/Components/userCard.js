@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
+// import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+// import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+// import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { Avatar } from '@mui/material';
 
 export default function UserCard({username, userBio,  PublicKeyBase58Check}) {
-  const theme = useTheme();
   const avatarUrl = `https://diamondapp.com/api/v0/get-single-profile-picture/${PublicKeyBase58Check}?fallback=https://diamondapp.com/assets/img/default_profile_pic.png`
   return (
     <Card sx={{ display: 'flex', bgcolor: (theme) => theme.palette.secondary.main, }} >

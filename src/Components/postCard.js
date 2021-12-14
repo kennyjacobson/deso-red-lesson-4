@@ -11,11 +11,9 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {Link} from "react-router-dom";
-import { Box } from '@mui/system';
 import { CardActionArea } from '@mui/material';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
@@ -28,7 +26,7 @@ function urlify(text) {
     return text.split(urlRegex)
        .map(part => {
           if(part.match(urlRegex)) {
-             return <a href={part} target="_blank">{part}</a>;
+             return <a href={part} target="_blank" rel="noreferrer">{part}</a>;
           }
           return part;
        });

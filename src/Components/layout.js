@@ -12,8 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import {
     BrowserRouter as Router,
     Routes,
-    Route,
-    Link
+    Route
   } from "react-router-dom";
 
 // const useStyles = makeStyles((theme) => ({

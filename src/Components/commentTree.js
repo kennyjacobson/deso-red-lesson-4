@@ -8,7 +8,6 @@ import { Avatar, Card, CardContent, IconButton, Typography } from '@mui/material
 import { Box, styled } from '@mui/system';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
 
 
@@ -66,7 +65,6 @@ function StyledTreeItem(props) {
     const {
       bgColor,
       color,
-      avatarSrc: avatarSrc,
       coinPrice,
       userName,
       body,
@@ -134,7 +132,6 @@ function StyledTreeItem(props) {
 StyledTreeItem.propTypes = {
     bgColor: PropTypes.string,
     color: PropTypes.string,
-    avatarSrc: PropTypes.elementType.isRequired,
     coinPrice: PropTypes.string,
     userName: PropTypes.string.isRequired,
     body: PropTypes.string,
@@ -151,7 +148,6 @@ export default function CommentTree({treeData}) {
         key={nodes.id} 
         nodeId={nodes.id} 
         userName={nodes.username} 
-        avatarSrc={nodes.avatarSrc} 
         body={nodes.body} 
         coinPrice={nodes.coinPrice} 
         postAge={nodes.postAge}

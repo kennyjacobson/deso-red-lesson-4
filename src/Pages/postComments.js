@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import {  Grid,   Typography } from '@mui/material'
+import {  Grid } from '@mui/material'
 import { useParams } from "react-router-dom"
 import PostCard from '../Components/postCard'
 import CommentTree from '../Components/commentTree'
 import DesoApi from '../Deso/desoApi'
 import BuildCommentTree from '../Deso/buildCommentTree'
-import { AssuredWorkload } from '@mui/icons-material'
+
 
 const initialPostData = {
     PostFound: {
@@ -106,13 +106,13 @@ const initialTreeData = { children : [{
 // ]
 // }
 
-function PostComments(props) {
+const PostComments = (props) => {
     const [postData, setPostData] = useState(initialPostData)
     const [treeData, setTreeData] = useState(initialTreeData)
     const { id } = useParams()
     useEffect(() => {
         fetchPost()
-    }, []) 
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const fetchPost = async () => {
         const desoApi = new DesoApi()

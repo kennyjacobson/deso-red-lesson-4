@@ -1,8 +1,7 @@
 import React, {useState} from 'react'
 import './App.css'
 // import { ThemeProvider } from '@mui/material';
-import theme from "./theme"
-import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
+import {  ThemeProvider, createTheme } from '@mui/material/styles';
 import Layout from '../Components/layout'
 import DesignTokens from './designTokens'
 import { CssBaseline } from '@mui/material';
