@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate  } from "react-router-dom"
 import {  Grid, Skeleton, Stack } from '@mui/material'
 import { useParams } from "react-router-dom"
 import PostCard from '../Components/postCard'
@@ -19,38 +20,40 @@ const initialPostData = {
     }
 }
 
-const initialTreeData = { children : [{
-    id: 'root',
-    username: 'Lorem',
-    body: 'Lorem dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    coinPrice: '$125.00',
-    avatarSrc: '/logo512.png',
-    postAge: '30 mins ago',
-    children: [
-      {
-        id: '1',
-        username: 'Lorem',
-        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        coinPrice: '$125.00',
-        postAge: '20 mins ago',
-      },
-      {
-        id: '3',
-        username: 'Lorem',
-        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        coinPrice: '$125.00',
-        children: [
-          {
-            id: '4',
-            username: 'Lorem',
-          },
-        ],
-      },
-    ],
-  },
+const initialTreeData = { children : []}
 
-]
-}
+// const initialTreeData = { children : [{
+//   id: 'root',
+//   username: 'Lorem',
+//   body: 'Lorem dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+//   coinPrice: '$125.00',
+//   avatarSrc: '/logo512.png',
+//   postAge: '30 mins ago',
+//   children: [
+//     {
+//       id: '1',
+//       username: 'Lorem',
+//       body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+//       coinPrice: '$125.00',
+//       postAge: '20 mins ago',
+//     },
+//     {
+//       id: '3',
+//       username: 'Lorem',
+//       body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+//       coinPrice: '$125.00',
+//       children: [
+//         {
+//           id: '4',
+//           username: 'Lorem',
+//         },
+//       ],
+//     },
+//   ],
+// },
+
+// ]
+// }
 
 // const initialTreeData = { children : [{
 //     id: 'root',
@@ -111,11 +114,25 @@ const PostComments = (props) => {
     const [treeData, setTreeData] = useState(initialTreeData)
     const [waitingPost, setWaitingPost] = useState(false)
     const [waitingComments, setWaitingComments] = useState(false)
-
+    let navigate = useNavigate();
     const { id } = useParams()
     useEffect(() => {
+        props.setSearchFunction(() => searchForUser);
         fetchPost()
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+    function searchForUser(searchValue) {
+      //alert(searchValue)
+      //let navigate = useNavigate();
+      
+      
+      
+      //alert(thisUser)
+      // fetchUser(searchValue)
+      // fetchUserPosts(searchValue)
+      navigate("/" + searchValue, { replace: true })
+      //history.push("/" + searchValue)
+    }
 
     const fetchPost = async () => {
         setWaitingPost(true)
@@ -127,8 +144,12 @@ const PostComments = (props) => {
         setPostData(returnedPostData)
         setWaitingPost(false)
 
-        const returnedTreeData = await BuildCommentTree(returnedPostData)
+        let returnedTreeData = await BuildCommentTree(returnedPostData)
         console.log("returnedTreeData", returnedTreeData)
+        if(!returnedTreeData.children){
+          console.log("I'm an empty, empty.em,pty returnedTreeData")
+          returnedTreeData = initialTreeData 
+        }
         setTreeData(returnedTreeData)
         setWaitingComments(false)
     }

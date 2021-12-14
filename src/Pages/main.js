@@ -32,7 +32,7 @@ function Main(props) {
     const [waitingPosts, setWaitingPosts] = useState(false)
     //const [user, setUser ] = useState("KennyJ")
     const { id } = useParams()
-    let thisUser = "hnshah"
+    let thisUser = "kennyj"
     if(id){
         thisUser = id
     }

@@ -107,7 +107,7 @@ function Layout({colorPaletteMode, toggleColorMode}) {
                 <Routes>
                     <Route exact path="/" element={<Main searchValue={searchValue}  setSearchFunction={(f) => {setChildSearchFunction(f)}} />}  />
                     <Route exact path="/:id" element={<Main searchValue={searchValue}  setSearchFunction={(f) => {setChildSearchFunction(f)}} />}  />
-                    <Route path="/postComments/:id" element={<PostComments/>} />   
+                    <Route path="/postComments/:id" element={<PostComments  searchValue={searchValue}  setSearchFunction={(f) => {setChildSearchFunction(f)}}/>} />   
                    
                 </Routes>
                 </Paper>
