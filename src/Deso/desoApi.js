@@ -26,8 +26,13 @@ class DesoApi {
             NumToFetch : 10,
             MediaRequired : false
         }
-        const result = await this.getClient().post(path, data)
-        return result?.data
+        try{
+            const result = await this.getClient().post(path, data)
+            return result?.data
+        } catch (error) {
+            console.log(error)
+            return null
+        }
     }
 
     async getSingleProfile  (publicKey, username){
@@ -41,8 +46,14 @@ class DesoApi {
             PublicKeyBase58Check : publicKey,
             Username : username
         }
-        const result = await this.getClient().post(path, data)
-        return result?.data
+        
+        try{
+            const result = await this.getClient().post(path, data)
+            return result?.data
+        } catch (error) {
+            console.log(error)
+            return null
+        }
     }
 
     async getSinglePost  (postHash, commentLimit = 20, fetchParents = false, commentOffset= 0, addGlobalFeedBool = false){
@@ -60,8 +71,13 @@ class DesoApi {
             CommentLimit:commentLimit,
             AddGlobalFeedBool:addGlobalFeedBool
         }
-        const result = await this.getClient().post(path, data)
-        return result?.data
+        try{
+            const result = await this.getClient().post(path, data)
+            return result?.data
+        } catch (error) {
+            console.log(error)
+            return null
+        }
     }
 
     async getUsersStateless  (publicKeyList, skipForLeaderboard){
@@ -76,8 +92,14 @@ class DesoApi {
             PublicKeysBase58Check : publicKeyList,
             SkipForLeaderboard : skipForLeaderboard
         }
-        const result = await this.getClient().post(path, data)
-        return result?.data
+        try{
+            const result = await this.getClient().post(path, data)
+            return result?.data
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+        
     }
 
     getClient (){

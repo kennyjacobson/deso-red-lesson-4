@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AppBar,   Grid,  IconButton,  Paper,  Toolbar, Typography } from '@mui/material';
 // import { makeStyles } from '@mui/styles';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -39,9 +39,22 @@ const ToolBarPadder = styled('div')({
     height: '5em',
 })
 
-function Layout({colorPaletteMode, toggleColorMode, theme}) {
+function Layout({colorPaletteMode, toggleColorMode}) {
     // const classes = useStyles()
-    console.log("theme from layout.js",theme)
+    const [searchValue, setSearchValue] = useState("")
+    const [childSearchFunction, setChildSearchFunction] = useState(null)
+
+    const handleChange = e => {
+        setSearchValue(e.target.value);
+    }
+
+    const handleKeypress = e => {
+        //alert(e.target.value)
+        if (e.key === "Enter") {
+            childSearchFunction(e.target.value)
+        }
+    }
+
     return (
         <div >
             <AppBar position="fixed" >
@@ -60,6 +73,9 @@ function Layout({colorPaletteMode, toggleColorMode, theme}) {
                             
                             <InputBase
                                 placeholder="Search"
+                                value={searchValue}
+                                onChange={handleChange}
+                                onKeyPress={handleKeypress}
                                 sx={{
                                     opacity: '0.6',
                                     padding: '0px 18px',
@@ -90,7 +106,8 @@ function Layout({colorPaletteMode, toggleColorMode, theme}) {
                 <ToolBarPadder/>
                 <Paper>
                 <Routes>
-                    <Route exact path="/" element={<Main />}  />
+                    <Route exact path="/" element={<Main searchValue={searchValue}  setSearchFunction={(f) => {setChildSearchFunction(f)}} />}  />
+                    <Route exact path="/:id" element={<Main searchValue={searchValue}  setSearchFunction={(f) => {setChildSearchFunction(f)}} />}  />
                     <Route path="/postComments/:id" element={<PostComments/>} />   
                    
                 </Routes>

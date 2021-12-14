@@ -3,6 +3,8 @@ import {  Grid } from '@mui/material'
 import UserCard from '../Components/userCard'
 import PostCard from '../Components/postCard'
 import DesoApi from '../Deso/desoApi'
+import { useParams } from 'react-router'
+
 
 const user = {
     Profile:{
@@ -26,24 +28,42 @@ const posts ={ Posts : [
 function Main(props) {
     const [userData, setUserData] = useState(user)
     const [userPosts, setUserPosts] = useState(posts)
-    const thisUser = "hnshah"
+    //const [user, setUser ] = useState("KennyJ")
+    const { id } = useParams()
+    let thisUser = "hnshah"
+    if(id){
+        thisUser = id
+    }
+    
     useEffect(() => {
-        fetchUser()
-        fetchUserPosts()
+        props.setSearchFunction(() => searchForUser);
+        fetchUser(thisUser)
+        fetchUserPosts(thisUser)
     }, []) 
 
-    const fetchUser = async () => {
-        const desoApi = new DesoApi()
+    function searchForUser(searchValue) {
+        //alert(searchValue)
 
-        const returnedUserData = await desoApi.getSingleProfile(null, thisUser)
-        //console.log(returnedUserData)
+        if(searchValue){
+            thisUser = searchValue
+        }
+        
+        //alert(thisUser)
+        fetchUser(searchValue)
+        fetchUserPosts(searchValue)
+    }
+
+    const fetchUser = async (username) => {
+        const desoApi = new DesoApi()
+        const returnedUserData = await desoApi.getSingleProfile(null, username)
+        if(!returnedUserData) return
         setUserData(returnedUserData)
     }
 
-    const fetchUserPosts = async () => {
+    const fetchUserPosts = async (username) => {
         const desoApi = new DesoApi()
-        const returnedUserPostData = await desoApi.getPostsForPublicKey(thisUser, "")
-        //console.log(returnedUserPostData)
+        const returnedUserPostData = await desoApi.getPostsForPublicKey(username, "")
+        if(!returnedUserPostData) return
         setUserPosts(returnedUserPostData)
     }
 
@@ -62,6 +82,7 @@ function Main(props) {
             <Grid item xs={0} md={3}></Grid>
 
             {
+                (userPosts.Posts) ? 
                 userPosts.Posts.map((post) => (
                     <>
                     <Grid item xs={0} md={3}> </Grid>    
@@ -82,7 +103,7 @@ function Main(props) {
 
                     </>
                     
-                ))
+                )) : (<></>)
             }
             
         </Grid>

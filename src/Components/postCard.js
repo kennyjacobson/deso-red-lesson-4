@@ -62,7 +62,7 @@ export default function PostCard({username,coinPrice,postText,PublicKeyBase58Che
           <>
           </>
         ):(
-          <CardActionArea component={Link} to="/" sx={{ textDecoration: 'none' }}>
+          <CardActionArea component={Link} to={`/${username}`} sx={{ textDecoration: 'none' }}>
           <CardHeader
             avatar={
               <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe" src={avatarUrl} >
