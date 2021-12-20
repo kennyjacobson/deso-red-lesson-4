@@ -1,59 +1,59 @@
-import React, { useState } from 'react'
-import { AppBar,   Grid,  IconButton,  Paper,  Toolbar, Typography } from '@mui/material';
-// import { makeStyles } from '@mui/styles';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import MenuIcon from '@mui/icons-material/Menu';
-import Main from '../Pages/main';
-import PostComments from '../Pages/postComments';
-import { styled } from '@mui/system';
-import { InputBase } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route
-  } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
+import { AppBar,   Grid,  IconButton,    Paper,  Toolbar, Typography } from '@mui/material'
+import {BrowserRouter as Router,Routes,Route} from "react-router-dom"
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
+import MenuIcon from '@mui/icons-material/Menu'
+import Main from '../Pages/main'
+import PostComments from '../Pages/postComments'
+import { styled } from '@mui/system'
+import Autocomplete from '@mui/material/Autocomplete'
+import TextField from '@mui/material/TextField'
+import DesoApi from '../Deso/desoApi'
 
-// const useStyles = makeStyles((theme) => ({
-//     root: {
-//       display: 'flex',
-//     },
-//     main: {
-//       width: '100%',
-//     },
-//     modalStyle1:{
-//       position:'absolute',
-//       top:'10%',
-//       left:'10%',
-//       overflow:'scroll',
-//       height:'100%',
-//       display:'block'
-//     },
-
-//   }))
 
 const ToolBarPadder = styled('div')({
     // necessary for content to be below app bar
     height: '5em',
 })
 
+const defaultAutocompleteOptions =  [
+    { label: 'KennyJ', id: 321654 },
+    { label: 'MelanieJ', id: 321654 },
+    { label: 'KennyJTest', id: 321654 },
+]
+
 function Layout({colorPaletteMode, toggleColorMode}) {
-    // const classes = useStyles()
-    const [searchValue, setSearchValue] = useState("")
+
     const [childSearchFunction, setChildSearchFunction] = useState(null)
+    const [value, setValue] = useState(defaultAutocompleteOptions[0])
+    const [autocompleteOptions, setAutocompleteOptions] = useState(defaultAutocompleteOptions)
+    const [inputValue, setInputValue] = useState('')
 
-    const handleChange = e => {
-        setSearchValue(e.target.value);
-    }
+    useEffect(() => {
+        fetchProfilesPartialMatch(inputValue)
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handleKeypress = e => {
-        //alert(e.target.value)
-        if (e.key === "Enter") {
-            childSearchFunction(e.target.value)
+    const fetchProfilesPartialMatch = async (partialName) => {
+        if(partialName){
+            const desoApi = new DesoApi()
+            const returnedProfileData = await desoApi.getProfilesPartialMatch(partialName)
+            if(returnedProfileData.ProfilesFound){
+                console.log(returnedProfileData)
+                const dropdownValues = profileToDropdown(returnedProfileData.ProfilesFound)
+                setAutocompleteOptions(dropdownValues)
+            }
         }
     }
 
+    const profileToDropdown = (profileData) => {
+        const dropdownValues = profileData.map(function(item) {
+            return {label : item.Username, id : item.PublicKeyBase58Check}
+        })
+        console.log(dropdownValues)
+        return dropdownValues
+    }
+    
     return (
         <div >
             <AppBar position="fixed" >
@@ -65,12 +65,12 @@ function Layout({colorPaletteMode, toggleColorMode}) {
                                 <MenuIcon />
                             </IconButton>
                         </Grid>
-                        <Grid item xs={1}>
+                        <Grid item xs={2}>
                             <Typography   >deso:red</Typography>
                         </Grid>
-                        <Grid item xs={8} textAlign="center"> 
+                        <Grid item xs={7} textAlign="center"> 
                             
-                            <InputBase
+                            {/* <InputBase
                                 placeholder="Search"
                                 value={searchValue}
                                 onChange={handleChange}
@@ -89,7 +89,34 @@ function Layout({colorPaletteMode, toggleColorMode}) {
                                     borderRadius: '10px'
                                     }}
                                 startAdornment={<SearchIcon />}
-                                />
+                                /> */}
+
+                        <Autocomplete
+                            value={value}
+                            onChange={(event, newValue) => {
+                                setValue(newValue)
+                                console.log(newValue)
+                                if(newValue) {
+                                    console.log(newValue.label)
+                                    childSearchFunction(newValue.label)
+                                }
+                            }}
+                            inputValue={inputValue}
+                            onInputChange={(event, newInputValue) => {
+                                setInputValue(newInputValue)
+                                //alert(newInputValue)
+                                console.log(newInputValue)
+                                if(newInputValue){
+                                    console.log(newInputValue)
+                                    fetchProfilesPartialMatch(newInputValue)
+                                }
+                            }}
+                            id="controllable-states-demo"
+                            options={autocompleteOptions}
+                            sx={{ width: 300, }}
+                            renderInput={(params) => <TextField {...params} label="Search" />}
+                        />
+
                         </Grid>
                         <Grid item xs={2}>
                             {colorPaletteMode} mode
@@ -105,9 +132,9 @@ function Layout({colorPaletteMode, toggleColorMode}) {
                 <ToolBarPadder/>
                 <Paper>
                 <Routes>
-                    <Route exact path="/" element={<Main searchValue={searchValue}  setSearchFunction={(f) => {setChildSearchFunction(f)}} />}  />
-                    <Route exact path="/:id" element={<Main searchValue={searchValue}  setSearchFunction={(f) => {setChildSearchFunction(f)}} />}  />
-                    <Route path="/postComments/:id" element={<PostComments  searchValue={searchValue}  setSearchFunction={(f) => {setChildSearchFunction(f)}}/>} />   
+                    <Route exact path="/" element={<Main   setSearchFunction={(f) => {setChildSearchFunction(f)}} />}  />
+                    <Route exact path="/:id" element={<Main   setSearchFunction={(f) => {setChildSearchFunction(f)}} />}  />
+                    <Route path="/postComments/:id" element={<PostComments    setSearchFunction={(f) => {setChildSearchFunction(f)}}/>} />   
                    
                 </Routes>
                 </Paper>

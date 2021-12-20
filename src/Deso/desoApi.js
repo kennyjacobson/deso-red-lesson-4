@@ -85,12 +85,32 @@ class DesoApi {
             console.log("publicKeyList is required")
             return
         }
-        //if(!skipForLeaderboard) skipForLeaderboard=true
 
         const path = "/v0/get-users-stateless"
         const data = {
             PublicKeysBase58Check : publicKeyList,
             SkipForLeaderboard : skipForLeaderboard
+        }
+        try{
+            const result = await this.getClient().post(path, data)
+            return result?.data
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+        
+    }
+
+    async getProfilesPartialMatch  (partialName){
+        if(!partialName){
+            console.log("partialName is required")
+            return
+        }
+
+        const path = "/v0/get-profiles"
+        const data = {
+            ReaderPublicKeyBase58Check : "",
+            UsernamePrefix : partialName
         }
         try{
             const result = await this.getClient().post(path, data)
