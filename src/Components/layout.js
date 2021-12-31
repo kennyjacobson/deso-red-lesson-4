@@ -17,17 +17,17 @@ const ToolBarPadder = styled('div')({
     height: '5em',
 })
 
-const defaultAutocompleteOptions =  [
-    { label: 'KennyJ', id: 321654 },
-    { label: 'MelanieJ', id: 321654 },
-    { label: 'KennyJTest', id: 321654 },
-]
+// const defaultAutocompleteOptions =  [
+//     { label: 'KennyJ', id: 321654 },
+//     { label: 'MelanieJ', id: 321654 },
+//     { label: 'KennyJTest', id: 321654 },
+// ]
 
 function Layout({colorPaletteMode, toggleColorMode}) {
 
     const [childSearchFunction, setChildSearchFunction] = useState(null)
-    const [value, setValue] = useState(defaultAutocompleteOptions[0])
-    const [autocompleteOptions, setAutocompleteOptions] = useState(defaultAutocompleteOptions)
+    const [value, setValue] = useState("")
+    const [autocompleteOptions, setAutocompleteOptions] = useState([])
     const [inputValue, setInputValue] = useState('')
 
     useEffect(() => {
